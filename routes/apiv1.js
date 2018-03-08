@@ -12,8 +12,8 @@ var request = REQUEST.defaults({
   strictSSL: false
 });
 
-//var OPENWEATHERURL = "https://service.us.apiconnect.ibmcloud.com/gws/apigateway/api/c23baf68ee1cee3c6de9b4e1ab73e654f4597ee431fe6408d0bb906e6774c976/a9f02360-4ef1-46d6-9406-430c27ac582e";
-var OPENWEATHERURL = "http://api.openweathermap.org/data/2.5/weather?appid=6b7b471967dd0851d0010cdecf28f829&units=imperial?";
+var OPENWEATHERURL = "https://service.us.apiconnect.ibmcloud.com/gws/apigateway/api/c23baf68ee1cee3c6de9b4e1ab73e654f4597ee431fe6408d0bb906e6774c976/a9f02360-4ef1-46d6-9406-430c27ac582e";
+//var OPENWEATHERURL = "http://api.openweathermap.org/data/2.5/weather?appid=6b7b471967dd0851d0010cdecf28f829&units=imperial?";
 
 var getCurrentDatetime = function() {
   var currentdate = new Date();
