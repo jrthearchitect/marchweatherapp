@@ -2,7 +2,6 @@ module.exports = function (grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-
     bower: {
         install: {
             options: {
@@ -202,7 +201,6 @@ module.exports = function (grunt) {
         },
 
     });
-
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-available-tasks');
     grunt.loadNpmTasks('grunt-bower-installer');

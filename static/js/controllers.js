@@ -1,69 +1,82 @@
-
 var ConsoleModule = angular.module('ConsoleModule', ['ngRoute']);
 
-ConsoleModule.config(['$routeProvider', '$locationProvider','$sceDelegateProvider', '$httpProvider',
-    function ($routeProvider, $locationProvider, $sceDelegateProvider, $httpProvider) {
+ConsoleModule.config(['$routeProvider', '$locationProvider', '$sceDelegateProvider', '$httpProvider',
+  function($routeProvider, $locationProvider, $sceDelegateProvider, $httpProvider) {
     $routeProvider.when('/', {
-        templateUrl: '/partials/Byzip.html',
-        controller: 'wcontroller',
-        controllerAs: 'wcontroller'
+      templateUrl: '/partials/Byzip.html',
+      controller: 'wcontroller',
+      controllerAs: 'wcontroller'
     });
-}]);
+  }
+]);
 
 ConsoleModule.controller('wcontroller', ['$scope', '$http', '$routeParams', '$timeout', '$sce',
-    function($scope, $http, $routeParams, $timeout, $sce) {
+  function($scope, $http, $routeParams, $timeout, $sce) {
 
     $scope.somemessage = "Some weather";
     $scope.zip1City = "";
     $scope.zip1Weather = "";
+    $scope.inputHistory = [];
+    $scope.clientId = "ye@metlife.co.jp";
 
-    $scope.zip = function(which) {
-
-        var data = "";
-        if(which === 1) {
-            data = $scope.zip1m;
-        } else if(which === 2) {
-            data = $scope.zip2m;
-        } else if(which === 3) {
-            data = $scope.zip3m;
-        } else if(which === 4) {
-            data = $scope.zip4m;
-        } 
-
-        if(data.length === 5) {
-            $http({
-                method: "GET",
-                url: '/api/v1/getWeather?zip=' + data
-            }).then( function(response) {
-                if(which === 1) {
-                    $scope.zip1City = response.data.city;
-                    $scope.zip1Weather = response.data.weather;
-                } else if(which === 2) {
-                    $scope.zip2City = response.data.city;
-                    $scope.zip2Weather = response.data.weather;
-                } else if(which === 3) {
-                    $scope.zip3City = response.data.city;
-                    $scope.zip3Weather = response.data.weather;
-                } else if(which === 4) {
-                    $scope.zip4City = response.data.city;
-                    $scope.zip4Weather = response.data.weather;
-                } 
-            });
-        } else {
-            if(which === 1) {
-                    $scope.zip1City = "";
-                    $scope.zip1Weather = "";
-                } else if(which === 2) {
-                    $scope.zip2City = "";
-                    $scope.zip2Weather = "";
-                } else if(which === 3) {
-                    $scope.zip3City = "";
-                    $scope.zip3Weather = "";
-                } else if(which === 4) {
-                    $scope.zip4City = "";
-                    $scope.zip4Weather = "";
-                } 
-        }
+    var cleanDisplay = function(){
+      //$scope.zip = "";
+      $scope.zipCity = "";
+      $scope.zipWeather = "";
+      $scope.zipTime = "";
+      $scope.colorStyle = "";
     };
-    
-}]);
+
+    $scope.zipUpdate = function() {
+      var value = $scope.zip || "";
+      if (value.length === 5) {
+        $http({
+          method: "GET",
+          url: '/api/v1/getWeather?zip=' + value
+        }).then(function(response) {
+          $scope.zipCity = response.data.city;
+          $scope.zipWeather = response.data.weather;
+          $scope.zipTime = response.data.time;
+          $scope.colorStyle = response.data.colorStyle;
+          if ($scope.colorStyle === '') {
+            $scope.inputHistory.push({
+              'zip': value,
+              'zipCity': $scope.zipCity,
+              'zipWeather': $scope.zipWeather,
+              'zipTime': $scope.zipTime
+            });
+            console.log($scope.inputHistory);
+          }
+        });
+      } else {
+        cleanDisplay();
+      }
+    };
+
+    $scope.clientChange = function() {
+      console.log('New Client is '+$scope.clientId);
+      if ($scope.clientId === ""){
+        console.error('Invalid Client ID');
+        $scope.clientId = 'ye@metlife.co.jp';
+        return;
+      }
+      cleanDisplay();
+      $scope.zip = "";
+      $scope.reloadHistory();
+    };
+
+    $scope.isHistoryEmpty = function() {
+      return $scope.inputHistory.length == 0;
+    };
+
+    $scope.reloadHistory = function() {
+      $http({
+        method: "GET",
+        url: '/api/v1/getHistory?clientId=' + $scope.clientId
+      }).then(function(response) {
+        $scope.inputHistory = response.data || [];
+      });
+    };
+
+  }
+]);
