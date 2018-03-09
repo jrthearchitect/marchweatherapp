@@ -34,8 +34,12 @@ exports.saveInput = function(db,zipData, clientId, errCallback, okCallback) {
 };
 
 exports.getInputHistory = function(db,clientId) {
-  db.collection('ziphistory').find({
+  var data = db.collection('ziphistory').find({
     'clientId': clientId
-  }) || {};
-  return data.history || [];
+  });
+  if ((data !== undefined) && (data.history !== undefined)){
+    return data.history;
+  }else {
+    return [];
+  }
 };

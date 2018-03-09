@@ -13,16 +13,15 @@ ConsoleModule.config(['$routeProvider', '$locationProvider', '$sceDelegateProvid
 ConsoleModule.controller('wcontroller', ['$scope', '$http', '$routeParams', '$timeout', '$sce',
   function($scope, $http, $routeParams, $timeout, $sce) {
 
-    $scope.somemessage = "Some weather";
-    $scope.zip1City = "";
-    $scope.zip1Weather = "";
+    $scope.city = "";
+    $scope.weather = "";
     $scope.inputHistory = [];
     $scope.clientId = "ye@metlife.co.jp";
 
-    var cleanDisplay = function(){
+    var cleanDisplay = function() {
       //$scope.zip = "";
-      $scope.zipCity = "";
-      $scope.zipWeather = "";
+      $scope.city = "";
+      $scope.weather = "";
       $scope.zipTime = "";
       $scope.colorStyle = "";
     };
@@ -32,17 +31,17 @@ ConsoleModule.controller('wcontroller', ['$scope', '$http', '$routeParams', '$ti
       if (value.length === 5) {
         $http({
           method: "GET",
-          url: '/api/v1/getWeather?zip=' + value
+          url: '/api/v1/getWeather?zip=' + value + '&clientId=' + $scope.clientId
         }).then(function(response) {
-          $scope.zipCity = response.data.city;
-          $scope.zipWeather = response.data.weather;
-          $scope.zipTime = response.data.time;
+          $scope.city = response.data.city;
+          $scope.weather = response.data.weather;
+          $scope.zipTime = response.data.zipTime;
           $scope.colorStyle = response.data.colorStyle;
           if ($scope.colorStyle === '') {
             $scope.inputHistory.push({
               'zip': value,
-              'zipCity': $scope.zipCity,
-              'zipWeather': $scope.zipWeather,
+              'city': $scope.city,
+              'weather': $scope.weather,
               'zipTime': $scope.zipTime
             });
             console.log($scope.inputHistory);
@@ -54,8 +53,8 @@ ConsoleModule.controller('wcontroller', ['$scope', '$http', '$routeParams', '$ti
     };
 
     $scope.clientChange = function() {
-      console.log('New Client is '+$scope.clientId);
-      if ($scope.clientId === ""){
+      console.log('New Client is ' + $scope.clientId);
+      if ($scope.clientId === "") {
         console.error('Invalid Client ID');
         $scope.clientId = 'ye@metlife.co.jp';
         return;

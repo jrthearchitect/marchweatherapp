@@ -20,11 +20,11 @@
         </tr>
         <tr>
           <th>Location</th>
-          <td class="{{colorStyle}}">{{zipCity}}</td>
+          <td class="{{colorStyle}}">{{city}}</td>
         </tr>
         <tr>
           <th>Weather</th>
-          <td class="{{colorStyle}}">{{zipWeather}}</td>
+          <td class="{{colorStyle}}">{{weather}}</td>
         </tr>
       </tbody>
     </table>
@@ -61,8 +61,8 @@
         </tr>
         <tr ng-repeat="input in inputHistory.slice().reverse()">
           <td>{{input.zip}}</td>
-          <td>{{input.zipCity}}</td>
-          <td>{{input.zipWeather}}</td>
+          <td>{{input.city}}</td>
+          <td>{{input.weather}}</td>
           <td>{{input.zipTime}}</td>
         </tr>
         <tr ng-show="isHistoryEmpty()">

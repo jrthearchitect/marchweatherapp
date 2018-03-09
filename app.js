@@ -36,13 +36,16 @@ app.get("/", function(req, res) {
 });
 
 MongoClient.connect(databaseUrl, function(err, db) {
-  if (db !== undefined) {
+  if (err === undefined) {
     apiv1.initialize(db);
     http.createServer(app).listen(port, function() {
       console.log('Weather Report listening on ' + url);
     });
   } else {
-    console.log('Failed to connect to DB');
-    console.error(error);
+    console.log('Failed to connect to DB, Launch in-memory mode');
+    console.error(err);
+    http.createServer(app).listen(port, function() {
+      console.log('Weather Report listening on ' + url);
+    });
   }
 });
